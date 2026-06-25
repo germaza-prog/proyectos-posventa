@@ -131,9 +131,10 @@
                         </table>
                     </div>
                     <!-- Mensaje de estado vacío -->
-                    <div id="emptyState" class="hidden-view p-8 text-center text-slate-500">
+                    <div id="emptyState" class="hidden-view p-12 text-center text-slate-500">
                         <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
-                        <p class="font-medium text-lg">No hay proyectos que coincidan con los filtros</p>
+                        <p class="font-bold text-lg text-slate-700">El panel de proyectos está vacío</p>
+                        <p class="text-sm mt-1">Por favor, utiliza el botón "Cargar CSV Local" o "Actualizar Web" para cargar la información.</p>
                     </div>
                 </div>
             </div>
@@ -181,14 +182,9 @@
             if (usuarioAutenticado) {
                 document.getElementById('loginView').classList.add('hidden-view');
                 document.getElementById('dashboardView').classList.remove('hidden-view');
-                if(currentProjectData.length === 0) {
-                    const defaultData = parseCSV(mockCsvData);
-                    currentProjectData = defaultData;
-                    populateEncargados(defaultData);
-                    applyFilters();
-                } else {
-                    applyFilters();
-                }
+                
+                // Eliminamos la inyección de datos de ejemplo. El panel inicia vacío.
+                applyFilters();
             } else {
                 document.getElementById('loginView').classList.remove('hidden-view');
                 document.getElementById('dashboardView').classList.add('hidden-view');
@@ -211,12 +207,6 @@
             usuarioAutenticado = false;
             checkLoginState();
         }
-
-        const mockCsvData = `ID,ENCARGADO,NOMBRE_PROYECTO,MOTIVO,FECHA_INICIO,FECHA_TERMINO,AVANCE,OBSERVACIONES
-1,Germán Maza,Estandarización de Procedimiento de Garantías,Evitar un costo negativo por rechazos,01-06-2026,30-10-2026,25,Coordinar mesas de trabajo operativas
-2,Ximena,Auditoría Técnica Mensual,Mejorar NPS regional (Actual 74.7),15-05-2026,15-12-2026,75,AppSheet en desarrollo para las 5 sucursales
-3,Germán Maza,Organigrama de Sucursales,Informar a Astara y público,01-03-2026,30-06-2026,95,Falta instalación en ventas y servicio
-4,Mecánica General,Checklist Semanal Producción,Control de facturación y vehículos detenidos,01-02-2026,30-05-2026,100,Protocolo activo. Revisar casos con DTC P200E.`;
 
         function parseCSV(csvText) {
             const separator = csvText.indexOf(';') !== -1 ? ';' : ',';
