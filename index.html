@@ -27,7 +27,7 @@
         <div class="bg-white p-8 rounded-xl shadow-xl w-96 max-w-full border border-slate-200">
             <div class="flex items-center justify-center mb-6">
                 <img src="https://salfasur.cl/_next/image?url=%2Fmarcas%2Flogo-salfasur-web-50.png&w=256&q=75" alt="Salfa Sur" class="h-10 mr-3 object-contain">
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Salfa Sur PosVenta</h1>
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Control Ejecutivo</h1>
             </div>
             <p class="text-sm text-slate-500 mb-6 text-center">Gestión y Seguimiento de Proyectos</p>
             <form id="loginForm" onsubmit="handleLogin(event)">
@@ -74,12 +74,12 @@
                         <h2 class="text-lg font-bold text-slate-800">Estado de Avance</h2>
                     </div>
                     <div class="flex gap-3">
-                        <!-- NUEVO BOTÓN: Actualizar desde Web -->
+                        <!-- BOTÓN: Actualizar desde Web -->
                         <button onclick="fetchWebData()" id="btn-actualizar" class="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-100 hover:shadow-sm transition" title="Intenta descargar datos de SharePoint">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar Web
                         </button>
                         
-                        <!-- BOTÓN EXISTENTE: Cargar CSV Local -->
+                        <!-- BOTÓN: Cargar CSV Local -->
                         <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
                         <button onclick="document.getElementById('csvFileInput').click()" class="flex items-center gap-2 bg-indigo-50 text-indigo-700 border border-indigo-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-100 hover:shadow-sm transition">
                             <i data-lucide="upload-cloud" class="w-4 h-4"></i> Cargar CSV Local
@@ -87,7 +87,7 @@
                     </div>
                 </div>
 
-                <!-- NUEVA SECCIÓN DE FILTROS -->
+                <!-- SECCIÓN DE FILTROS -->
                 <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex items-center gap-4 w-full md:w-auto">
                         <div class="flex items-center gap-2">
@@ -253,7 +253,6 @@
                     currentProjectData = data;
                     populateEncargados(data);
                     
-                    // Resetear filtros al cargar nuevo archivo
                     document.getElementById('filterEncargado').value = 'ALL';
                     setAvanceFilter('ALL');
                     
@@ -267,10 +266,8 @@
             event.target.value = ''; 
         }
 
-        // --- NUEVA FUNCIÓN: INTENTO DE CONEXIÓN WEB A SHAREPOINT --- //
         async function fetchWebData() {
             const btn = document.getElementById('btn-actualizar');
-            // Corregido: Lucide reemplaza la etiqueta <i> por un <svg>, así que ahora buscamos el elemento correcto para hacerlo girar.
             const icon = btn.querySelector('svg');
             
             if(icon) icon.classList.add('animate-spin');
@@ -282,7 +279,6 @@
                 
                 const text = await response.text();
                 
-                // Si Microsoft devuelve una página web de inicio de sesión en lugar del archivo
                 if(text.toLowerCase().includes("<!doctype html>") || text.toLowerCase().includes("<html")) {
                     throw new Error("SharePoint bloqueó el acceso directo o requiere iniciar sesión.");
                 }
@@ -294,7 +290,6 @@
                     populateEncargados(data);
                     document.getElementById('filterEncargado').value = 'ALL';
                     setAvanceFilter('ALL');
-                    // Mensaje de éxito claro
                     showToast("¡Actualización exitosa! Los datos se cargaron desde la web.");
                 } else {
                     throw new Error("El archivo está vacío o no es un formato válido.");
@@ -302,19 +297,16 @@
 
             } catch (error) {
                 console.warn("Motivo del fallo de conexión:", error);
-                // Mensaje de error claro advirtiendo el bloqueo
-                showToast("No se pudo descargar automáticamente. SharePoint bloqueó el acceso. Usa 'Cargar CSV Local'.", true);
+                showToast("Microsoft bloqueó la conexión automática. Usa 'Cargar CSV Local'.", true);
             } finally {
                 if(icon) icon.classList.remove('animate-spin');
             }
         }
 
-        // --- SISTEMA DE FILTROS LÓGICA --- //
         function populateEncargados(data) {
             const select = document.getElementById('filterEncargado');
             const currentVal = select.value;
             
-            // Obtener lista única de encargados, eliminando vacíos
             const encargados = [...new Set(data.map(item => item.ENCARGADO).filter(val => val && val.trim() !== ''))].sort();
             
             select.innerHTML = '<option value="ALL">Todos los encargados</option>';
@@ -333,7 +325,6 @@
             
             buttons.forEach(b => {
                 const btn = document.getElementById('btn-avance-' + b);
-                // ESTILOS CUANDO ESTÁ SELECCIONADO
                 if (b === category) {
                     if(b==='ALL') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border transition shadow-sm ring-2 ring-slate-400 ring-offset-1 border-slate-400 bg-slate-200 text-slate-800";
                     else if(b==='BAJO') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border transition shadow-sm ring-2 ring-red-400 ring-offset-1 border-red-300 bg-red-100 text-red-800";
@@ -341,7 +332,6 @@
                     else if(b==='AVANZADO') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border transition shadow-sm ring-2 ring-orange-400 ring-offset-1 border-orange-300 bg-orange-100 text-orange-800";
                     else if(b==='TERMINADO') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border transition shadow-sm ring-2 ring-green-400 ring-offset-1 border-green-300 bg-green-100 text-green-800";
                 } 
-                // ESTILOS CUANDO ESTÁ INACTIVO
                 else {
                     if(b==='ALL') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border border-slate-300 bg-slate-50 text-slate-600 hover:bg-slate-100 transition";
                     else if(b==='BAJO') btn.className = "text-xs font-bold px-3 py-1.5 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-50 transition";
@@ -374,7 +364,6 @@
             renderDashboard(filteredData);
         }
 
-        // --- RENDERIZADO DE LA TABLA --- //
         function getProgressColorClasses(avance) {
             let val = parseInt(avance) || 0;
             if (val <= 29) return { bg: 'bg-red-500', text: 'text-red-700', badge: 'bg-red-100 text-red-800 border-red-200' };
