@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,29 +23,10 @@
 </head>
 <body class="text-slate-800 h-screen flex flex-col">
 
-    <!-- PANTALLA DE LOGIN -->
-    <div id="loginView" class="flex-1 flex items-center justify-center bg-slate-100">
-        <div class="bg-white p-8 rounded-xl shadow-xl w-96 max-w-full border border-slate-200">
-            <div class="flex items-center justify-center mb-6">
-                <img src="https://salfasur.cl/_next/image?url=%2Fmarcas%2Flogo-salfasur-web-50.png&w=256&q=75" alt="Salfa Sur" class="h-10 mr-3 object-contain">
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Control Ejecutivo</h1>
-            </div>
-            <p class="text-sm text-slate-500 mb-6 text-center">Gestión y Seguimiento de Proyectos</p>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="mb-4">
-                    <input type="password" id="password" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Contraseña de acceso" required>
-                    <p id="loginError" class="text-red-500 text-xs mt-2 hidden-view font-medium">Contraseña incorrecta. (Pista: Posventa26)</p>
-                </div>
-                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition duration-200">
-                    Ingresar al Dashboard
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- PANTALLA DEL DASHBOARD PRINCIPAL -->
-    <div id="dashboardView" class="hidden-view flex-1 flex flex-col">
+    <div id="dashboardView" class="flex-1 flex flex-col">
         
+        <!-- HEADER CORPORATIVO -->
         <header class="bg-header-dark text-white shadow-lg z-10">
             <div class="px-6 py-3.5 flex justify-between items-center">
                 <div class="flex items-center gap-4">
@@ -54,18 +36,13 @@
                         <p class="text-xs text-slate-400">Revisión Ejecutiva 2026</p>
                     </div>
                 </div>
-                <div>
-                    <button onclick="handleLogout()" class="text-sm border border-slate-600 hover:bg-slate-800 hover:border-slate-500 px-4 py-1.5 rounded-md transition duration-200 text-slate-300">
-                        Cerrar sesión
-                    </button>
-                </div>
             </div>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8">
-            <div class="max-w-[1400px] mx-auto space-y-4">
+            <div class="max-w-[1500px] mx-auto space-y-4">
 
-                <!-- Botonera de Acción -->
+                <!-- BOTONERA DE ACCIÓN -->
                 <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-blue-50 rounded-lg">
@@ -74,31 +51,36 @@
                         <h2 class="text-lg font-bold text-slate-800">Estado de Avance</h2>
                     </div>
                     <div class="flex gap-3">
-                        <!-- BOTÓN: Actualizar desde Web -->
-                        <button onclick="fetchWebData()" id="btn-actualizar" class="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-100 hover:shadow-sm transition" title="Intenta descargar datos de SharePoint">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar Web
-                        </button>
-                        
-                        <!-- BOTÓN: Cargar CSV Local -->
                         <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
                         <button onclick="document.getElementById('csvFileInput').click()" class="flex items-center gap-2 bg-indigo-50 text-indigo-700 border border-indigo-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-100 hover:shadow-sm transition">
-                            <i data-lucide="upload-cloud" class="w-4 h-4"></i> Cargar CSV Local
+                            <i data-lucide="upload-cloud" class="w-4 h-4"></i> Cargar CSV
                         </button>
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE FILTROS -->
+                <!-- SECCIÓN DE FILTROS AVANZADOS -->
                 <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <div class="flex items-center gap-4 w-full md:w-auto">
+                    
+                    <!-- Filtros por Combobox (Encargado y Tipo) -->
+                    <div class="flex flex-wrap items-center gap-4 w-full xl:w-auto">
                         <div class="flex items-center gap-2">
                             <i data-lucide="filter" class="w-4 h-4 text-slate-400"></i>
                             <span class="text-sm font-bold text-slate-700">Filtros:</span>
                         </div>
-                        <select id="filterEncargado" onchange="applyFilters()" class="border border-slate-300 text-sm font-medium text-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer shadow-sm min-w-[200px]">
+                        
+                        <select id="filterEncargado" onchange="applyFilters()" class="border border-slate-300 text-sm font-medium text-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer shadow-sm min-w-[180px]">
                             <option value="ALL">Todos los encargados</option>
+                        </select>
+
+                        <select id="filterTipo" onchange="applyFilters()" class="border border-slate-300 text-sm font-medium text-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer shadow-sm min-w-[160px]">
+                            <option value="ALL">Todos los tipos</option>
+                            <option value="UNICO">Proyectos Únicos</option>
+                            <option value="MENSUAL">Tareas Mensuales</option>
+                            <option value="SEMANAL">Tareas Semanales</option>
                         </select>
                     </div>
                     
+                    <!-- Filtros de Rango de Avance (Botones Pill) -->
                     <div class="flex flex-wrap items-center gap-2" id="filterAvanceContainer">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Rango:</span>
                         <button onclick="setAvanceFilter('ALL')" id="btn-avance-ALL" class="text-xs font-bold px-3 py-1.5 rounded-full border transition ring-2 ring-slate-400 ring-offset-1 border-slate-400 bg-slate-200 text-slate-800 shadow-sm">Todos</button>
@@ -109,20 +91,21 @@
                     </div>
                 </div>
 
-                <!-- Tabla Ejecutiva -->
+                <!-- TABLA DE DATOS -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left border-collapse">
                             <thead class="table-header text-xs uppercase font-bold tracking-wider">
                                 <tr>
-                                    <th class="px-5 py-4 w-12 text-center rounded-tl-lg">#</th>
-                                    <th class="px-5 py-4 w-40">Encargado</th>
-                                    <th class="px-5 py-4 w-64">Nombre del Proyecto</th>
-                                    <th class="px-5 py-4 w-64">Motivo</th>
-                                    <th class="px-5 py-4 w-32">Inicio</th>
-                                    <th class="px-5 py-4 w-32">Término</th>
-                                    <th class="px-5 py-4 w-48 text-center">% Avance</th>
-                                    <th class="px-5 py-4 rounded-tr-lg">Observaciones</th>
+                                    <th class="px-4 py-4 w-12 text-center rounded-tl-lg">#</th>
+                                    <th class="px-4 py-4 w-32">Encargado</th>
+                                    <th class="px-4 py-4 w-56">Proyecto</th>
+                                    <th class="px-4 py-4 w-24 text-center">Tipo</th>
+                                    <th class="px-4 py-4 w-28 text-center">Prioridad</th>
+                                    <th class="px-4 py-4 w-56">Motivo</th>
+                                    <th class="px-4 py-4 w-40 text-center">Plazos (Inicio - Fin)</th>
+                                    <th class="px-4 py-4 w-48 text-center">% Avance</th>
+                                    <th class="px-4 py-4 rounded-tr-lg">Observaciones</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-slate-100">
@@ -130,30 +113,24 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- Mensaje de estado vacío -->
-                    <div id="emptyState" class="hidden-view p-12 text-center text-slate-500">
+                    <!-- ESTADO VACÍO -->
+                    <div id="emptyState" class="p-12 text-center text-slate-500">
                         <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
-                        <p class="font-bold text-lg text-slate-700">El panel de proyectos está vacío</p>
-                        <p class="text-sm mt-1">Por favor, utiliza el botón "Cargar CSV Local" o "Actualizar Web" para cargar la información.</p>
+                        <p class="font-bold text-lg text-slate-700" id="emptyStateTitle">El panel de proyectos está vacío</p>
+                        <p class="text-sm mt-1" id="emptyStateDesc">Por favor, utiliza el botón "Cargar CSV" para subir tu matriz de datos.</p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Contenedor de Toasts -->
+    <!-- CONTENEDOR DE TOASTS -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
         lucide.createIcons();
-
-        const PASSWORD_CORRECTA = "Posventa26";
-        let usuarioAutenticado = false;
         let currentProjectData = [];
         let activeAvanceFilter = 'ALL';
-
-        // URL de tu Excel en SharePoint (Modificada con download=1 para intentar forzar descarga)
-        const URL_SHAREPOINT_WEB = "https://salfasurltda-my.sharepoint.com/:x:/g/personal/german_maza_salfasur_cl/IQChsh3t6gC_SLl0VI_P99dxAewl9jBu08nlUU-WcW39fw4?download=1";
 
         function showToast(message, isError = false) {
             const container = document.getElementById('toast-container');
@@ -178,44 +155,16 @@
             }, 5000);
         }
 
-        function checkLoginState() {
-            if (usuarioAutenticado) {
-                document.getElementById('loginView').classList.add('hidden-view');
-                document.getElementById('dashboardView').classList.remove('hidden-view');
-                
-                // Eliminamos la inyección de datos de ejemplo. El panel inicia vacío.
-                applyFilters();
-            } else {
-                document.getElementById('loginView').classList.remove('hidden-view');
-                document.getElementById('dashboardView').classList.add('hidden-view');
-            }
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            if (document.getElementById('password').value === PASSWORD_CORRECTA) {
-                usuarioAutenticado = true;
-                document.getElementById('loginError').classList.add('hidden-view');
-                document.getElementById('password').value = '';
-                checkLoginState();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden-view');
-            }
-        }
-
-        function handleLogout() {
-            usuarioAutenticado = false;
-            checkLoginState();
-        }
-
         function parseCSV(csvText) {
             const separator = csvText.indexOf(';') !== -1 ? ';' : ',';
             const lines = csvText.trim().split(/\r?\n/);
             if (lines.length === 0) return [];
 
-            const headers = lines[0].split(separator).map(h => h.trim().replace(/^"|"$/g, ''));
-            const data = [];
+            const headers = lines[0].split(separator).map(h => 
+                h.trim().replace(/^"|"$/g, '').toUpperCase().replace(/ /g, '_')
+            );
             
+            const data = [];
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 const currentline = lines[i].split(separator);
@@ -238,59 +187,22 @@
                 try {
                     const text = e.target.result;
                     const data = parseCSV(text);
-                    if (data.length === 0) throw new Error("Archivo vacío o sin formato.");
+                    if (data.length === 0) throw new Error("Archivo vacío.");
                     
                     currentProjectData = data;
                     populateEncargados(data);
                     
                     document.getElementById('filterEncargado').value = 'ALL';
+                    document.getElementById('filterTipo').value = 'ALL';
                     setAvanceFilter('ALL');
                     
-                    showToast("Archivo CSV cargado exitosamente.");
+                    showToast("Archivo cargado exitosamente.");
                 } catch (error) {
-                    console.error(error);
-                    showToast("Error al leer el archivo. Verifica que sea un CSV válido.", true);
+                    showToast("Error al leer archivo.", true);
                 }
             };
             reader.readAsText(file);
             event.target.value = ''; 
-        }
-
-        async function fetchWebData() {
-            const btn = document.getElementById('btn-actualizar');
-            const icon = btn.querySelector('svg');
-            
-            if(icon) icon.classList.add('animate-spin');
-
-            try {
-                const response = await fetch(URL_SHAREPOINT_WEB);
-                
-                if (!response.ok) throw new Error("Error de red o acceso denegado por CORS.");
-                
-                const text = await response.text();
-                
-                if(text.toLowerCase().includes("<!doctype html>") || text.toLowerCase().includes("<html")) {
-                    throw new Error("SharePoint bloqueó el acceso directo o requiere iniciar sesión.");
-                }
-
-                const data = parseCSV(text);
-                
-                if (data.length > 0) {
-                    currentProjectData = data;
-                    populateEncargados(data);
-                    document.getElementById('filterEncargado').value = 'ALL';
-                    setAvanceFilter('ALL');
-                    showToast("¡Actualización exitosa! Los datos se cargaron desde la web.");
-                } else {
-                    throw new Error("El archivo está vacío o no es un formato válido.");
-                }
-
-            } catch (error) {
-                console.warn("Motivo del fallo de conexión:", error);
-                showToast("Microsoft bloqueó la conexión automática. Usa 'Cargar CSV Local'.", true);
-            } finally {
-                if(icon) icon.classList.remove('animate-spin');
-            }
         }
 
         function populateEncargados(data) {
@@ -333,33 +245,95 @@
             applyFilters();
         }
 
-        function getAvanceColorCategory(avance) {
-            let val = parseInt(avance) || 0;
-            if (val <= 29) return 'BAJO';
-            if (val >= 30 && val <= 89) return 'MEDIO';
-            if (val >= 90 && val <= 99) return 'AVANZADO';
-            return 'TERMINADO'; // 100%
+        function calculateDynamicAvance(avanceString, fechaInicioStr) {
+            // Si tiene palabra clave "actual" o "según", activamos el cálculo de tiempo
+            if (avanceString && (avanceString.toLowerCase().includes('actual') || avanceString.toLowerCase().includes('según'))) {
+                const today = new Date();
+                const currentDay = today.getDate();
+                const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                
+                let startDay = 1; // Por defecto inicia el día 1
+
+                // Intentamos extraer el día de inicio del texto (ej: "15 de cada mes" -> saca el 15)
+                if (fechaInicioStr) {
+                    const match = fechaInicioStr.match(/(\d{1,2})/);
+                    if (match) {
+                        startDay = parseInt(match[0], 10);
+                        if (startDay > daysInMonth) startDay = daysInMonth; 
+                    }
+                }
+
+                // Si aún no llegamos al día de inicio, el progreso es 0
+                if (currentDay < startDay) return 0;
+                
+                // Si el mes tiene los mismos días que el inicio, o ya pasamos el mes
+                if (daysInMonth <= startDay) return 100;
+                
+                // Calculamos el avance relativo a la ventana de tiempo del mes restante
+                let elapsedDays = currentDay - startDay;
+                let totalWindowDays = daysInMonth - startDay;
+                
+                let progress = (elapsedDays / totalWindowDays) * 100;
+                return Math.max(0, Math.min(100, Math.round(progress)));
+            }
+            return parseInt(avanceString) || 0;
+        }
+
+        function getAvanceColorCategory(avanceVal) {
+            if (avanceVal <= 29) return 'BAJO';
+            if (avanceVal >= 30 && avanceVal <= 89) return 'MEDIO';
+            if (avanceVal >= 90 && avanceVal <= 99) return 'AVANZADO';
+            return 'TERMINADO'; 
         }
 
         function applyFilters() {
-            const encargado = document.getElementById('filterEncargado').value;
+            const encargadoFiltro = document.getElementById('filterEncargado').value;
+            const tipoFiltro = document.getElementById('filterTipo').value;
             const avanceCat = activeAvanceFilter;
 
             const filteredData = currentProjectData.filter(row => {
-                const matchEncargado = (encargado === 'ALL') || (row.ENCARGADO === encargado);
-                const matchAvance = (avanceCat === 'ALL') || (getAvanceColorCategory(row.AVANCE) === avanceCat);
-                return matchEncargado && matchAvance;
+                // Filtro 1: Encargado
+                const matchEncargado = (encargadoFiltro === 'ALL') || (row.ENCARGADO === encargadoFiltro);
+                
+                // Filtro 2: Tipo de Proyecto
+                const tipoValor = (row.TIPO_DE_PROYECTO || row.TIPO || 'Unico').toUpperCase();
+                let matchTipo = false;
+                if (tipoFiltro === 'ALL') matchTipo = true;
+                else if (tipoFiltro === 'UNICO' && (tipoValor.includes('UNICO') || tipoValor.includes('ÚNICO'))) matchTipo = true;
+                else if (tipoFiltro === 'MENSUAL' && tipoValor.includes('MENSUAL')) matchTipo = true;
+                else if (tipoFiltro === 'SEMANAL' && tipoValor.includes('SEMANAL')) matchTipo = true;
+
+                // Filtro 3: Rango de Avance
+                const rowAvance = row.AVANCE || row.PORCENTAJE || row['%_AVANCE'] || '0';
+                const fechaInic = row.FECHA_INICIO || '';
+                const calculoAvance = calculateDynamicAvance(rowAvance, fechaInic);
+                const matchAvance = (avanceCat === 'ALL') || (getAvanceColorCategory(calculoAvance) === avanceCat);
+                
+                return matchEncargado && matchTipo && matchAvance;
             });
 
             renderDashboard(filteredData);
         }
 
-        function getProgressColorClasses(avance) {
-            let val = parseInt(avance) || 0;
+        function getProgressColorClasses(val) {
             if (val <= 29) return { bg: 'bg-red-500', text: 'text-red-700', badge: 'bg-red-100 text-red-800 border-red-200' };
             if (val >= 30 && val <= 89) return { bg: 'bg-yellow-400', text: 'text-yellow-800', badge: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
             if (val >= 90 && val <= 99) return { bg: 'bg-orange-500', text: 'text-orange-800', badge: 'bg-orange-100 text-orange-800 border-orange-200' };
             return { bg: 'bg-green-500', text: 'text-green-800', badge: 'bg-green-100 text-green-800 border-green-200' };
+        }
+
+        function getPriorityBadge(priorityStr) {
+            const val = String(priorityStr || 'Media').toLowerCase().trim();
+            if(val.includes('alta')) return `<span class="bg-red-100 text-red-700 border border-red-200 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm"><i data-lucide="chevrons-up" class="w-3 h-3"></i> Alta</span>`;
+            if(val.includes('baja')) return `<span class="bg-green-100 text-green-700 border border-green-200 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm"><i data-lucide="chevron-down" class="w-3 h-3"></i> Baja</span>`;
+            return `<span class="bg-yellow-100 text-yellow-700 border border-yellow-200 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm"><i data-lucide="minus" class="w-3 h-3"></i> Media</span>`;
+        }
+
+        function getTypeBadge(typeStr) {
+            const val = String(typeStr || 'Unico').toLowerCase().trim();
+            if(val.includes('mensual')) return `<span class="bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full text-xs font-medium inline-flex items-center"><i data-lucide="rotate-cw" class="w-3 h-3 mr-1"></i>Mensual</span>`;
+            if(val.includes('semanal')) return `<span class="bg-cyan-50 text-cyan-700 border border-cyan-200 px-2.5 py-0.5 rounded-full text-xs font-medium inline-flex items-center"><i data-lucide="rotate-cw" class="w-3 h-3 mr-1"></i>Semanal</span>`;
+            return `<span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded-full text-xs font-medium inline-flex items-center"><i data-lucide="target" class="w-3 h-3 mr-1"></i>Único</span>`;
         }
 
         function renderDashboard(data) {
@@ -369,18 +343,36 @@
 
             if (data.length === 0) {
                 emptyState.classList.remove('hidden-view');
+                if (currentProjectData.length > 0) {
+                    document.getElementById('emptyStateTitle').innerText = "No hay resultados";
+                    document.getElementById('emptyStateDesc').innerText = "Ningún proyecto coincide con los filtros seleccionados.";
+                } else {
+                    document.getElementById('emptyStateTitle').innerText = "El panel de proyectos está vacío";
+                    document.getElementById('emptyStateDesc').innerText = "Por favor, utiliza el botón \"Cargar CSV\" para subir tu matriz de datos.";
+                }
             } else {
                 emptyState.classList.add('hidden-view');
                 data.forEach((row, index) => {
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-50 transition duration-150 ease-in-out group";
                     
-                    const avanceVal = parseInt(row.AVANCE) || 0;
+                    const keyTipo = Object.keys(row).find(k => k.includes('TIPO')) || 'TIPO_DE_PROYECTO';
+                    const keyPrioridad = Object.keys(row).find(k => k.includes('PRIORIDAD')) || 'PRIORIDAD';
+                    
+                    const tipo = row[keyTipo];
+                    const prioridad = row[keyPrioridad];
+                    const fechaInicio = row.FECHA_INICIO || '-';
+                    
+                    const avanceString = row.AVANCE || row.PORCENTAJE || row['%_AVANCE'] || '0';
+                    const isDynamic = avanceString.toLowerCase().includes('actual') || avanceString.toLowerCase().includes('según');
+                    const avanceVal = calculateDynamicAvance(avanceString, fechaInicio);
                     const colors = getProgressColorClasses(avanceVal);
+                    
+                    const displayAvanceTexto = isDynamic ? `<span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">Auto (Día actual)</span>` : `<span class="text-xs font-bold ${colors.text}">Progreso</span>`;
 
                     tr.innerHTML = `
-                        <td class="px-5 py-5 text-center font-semibold text-slate-400 border-b border-slate-100">${row.ID || index + 1}</td>
-                        <td class="px-5 py-5 border-b border-slate-100">
+                        <td class="px-4 py-4 text-center font-semibold text-slate-400 border-b border-slate-100">${row.ID || index + 1}</td>
+                        <td class="px-4 py-4 border-b border-slate-100">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs uppercase shadow-sm">
                                     ${(row.ENCARGADO || 'X').charAt(0)}
@@ -388,29 +380,35 @@
                                 <span class="font-medium text-slate-800">${row.ENCARGADO || 'Sin Asignar'}</span>
                             </div>
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100">
-                            <p class="font-bold text-slate-800 text-[15px] leading-tight mb-1">${row.NOMBRE_PROYECTO || 'Proyecto sin título'}</p>
+                        <td class="px-4 py-4 border-b border-slate-100">
+                            <p class="font-bold text-slate-800 text-[14px] leading-tight mb-1">${row.NOMBRE_PROYECTO || 'Proyecto sin título'}</p>
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100">
-                            <p class="text-sm text-slate-600 italic line-clamp-2">${row.MOTIVO || '-'}</p>
+                        <td class="px-4 py-4 border-b border-slate-100 text-center">
+                            ${getTypeBadge(tipo)}
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100 font-medium text-slate-700 text-sm">
-                            <div class="flex items-center gap-1.5"><i data-lucide="calendar-days" class="w-4 h-4 text-slate-400"></i> ${row.FECHA_INICIO || '-'}</div>
+                        <td class="px-4 py-4 border-b border-slate-100 text-center">
+                            ${getPriorityBadge(prioridad)}
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100 font-medium text-slate-700 text-sm">
-                            <div class="flex items-center gap-1.5"><i data-lucide="flag" class="w-4 h-4 text-slate-400"></i> ${row.FECHA_TERMINO || '-'}</div>
+                        <td class="px-4 py-4 border-b border-slate-100">
+                            <p class="text-xs text-slate-600 leading-relaxed">${row.MOTIVO || '-'}</p>
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100 w-48 align-middle">
+                        <td class="px-4 py-4 border-b border-slate-100 text-xs">
+                            <div class="flex flex-col gap-1 text-slate-600 font-medium">
+                                <div class="flex items-center gap-1.5"><i data-lucide="play-circle" class="w-3.5 h-3.5 text-slate-400"></i> ${fechaInicio}</div>
+                                <div class="flex items-center gap-1.5"><i data-lucide="stop-circle" class="w-3.5 h-3.5 text-slate-400"></i> ${row.FECHA_TERMINO || '-'}</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-b border-slate-100 w-48 align-middle">
                             <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-xs font-bold ${colors.text}">Progreso</span>
+                                ${displayAvanceTexto}
                                 <span class="text-xs font-bold border ${colors.badge} px-2 py-0.5 rounded-full shadow-sm">${avanceVal}%</span>
                             </div>
                             <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-inner">
                                 <div class="h-2.5 rounded-full ${colors.bg} transition-all duration-1000 ease-out" style="width: ${avanceVal}%"></div>
                             </div>
                         </td>
-                        <td class="px-5 py-5 border-b border-slate-100">
-                            <p class="text-sm text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-100 shadow-sm leading-relaxed">${row.OBSERVACIONES || 'Sin observaciones'}</p>
+                        <td class="px-4 py-4 border-b border-slate-100">
+                            <p class="text-[11px] text-slate-600 bg-slate-50 p-2 rounded border border-slate-100 shadow-sm leading-relaxed">${row.OBSERVACIONES || 'Sin observaciones'}</p>
                         </td>
                     `;
                     tbody.appendChild(tr);
